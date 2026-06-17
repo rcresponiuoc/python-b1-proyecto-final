@@ -16,18 +16,21 @@ class Wrapping(FoodPackage):
   def material(self):
     return 'Aluminium'
 
+## Se define el pack y material en base al ejemplo (pagina 7)
 class Bottle(FoodPackage):  
   def pack(self):
     return "Bottle"
   def material(self):
     return 'Plastic'
-      
+
+# Definido glass siguiendo ejemplo página 1, en inglés
 class Glass(FoodPackage):  
   def pack(self):
     return "Glass"
   def material(self):
     return 'Cardboard'
 
+# el primero comentado, el segundo por intuición que sea caja de cartón?
 class Box(FoodPackage):  
   def pack(self):
     return "Box"
