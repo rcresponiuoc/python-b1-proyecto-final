@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-#Write your code here
+from .food_package import *
 
 class Product(ABC):
     def __init__(self,id:str,name:str,price:float):
@@ -17,22 +17,36 @@ class Product(ABC):
     def foodPackage(self)->FoodPackage:
         pass  
 
+# empleando Self para dotar de identidad propia bajo los atributos que correspodan, al objeto (productos)
+# que obtendremos una vez pasados los parametros, en este caso, siguiedno los ejemplos/ datas
 class Hamburger(Product):
     def __init__(self,id:str,name:str,price:float):
         super().__init__(id,name,price)
     def type(self) -> str:
-        return "Hamburguesa"
+        return "Hamburger"
     def foodPackage(self) -> FoodPackage:
         return Wrapping()
         
 class Soda(Product):
-    #Write your code here
-    pass
+    def __init__(self,id:str,name:str,price:float):
+        super().__init__(id,name,price)
+    def type(self) -> str:
+        return "Soda"
+    def foodPackage(self) -> FoodPackage:
+        return Bottle()
 
 class Drink(Product):
-    #Write your code here
-    pass
+    def __init__(self,id:str,name:str,price:float):
+        super().__init__(id,name,price)
+    def type(self) -> str:
+        return "Drink"
+    def foodPackage(self) -> FoodPackage:
+        return Glass()
 
 class HappyMeal(Product):
-    #Write your code here
-    pass
+    def __init__(self,id:str,name:str,price:float):
+        super().__init__(id,name,price)
+    def type(self) -> str:
+        return "HappyMeal"
+    def foodPackage(self) -> FoodPackage:
+        return Box()
