@@ -101,11 +101,34 @@ f.	Agregar productos: Utilizar la instancia la clase 'Order', del paso c y llama
 
 
 """
-from products import *
+from util import *
 from users import *
+from products import *
+from orders import *
 
-    
 class PrepareOrder:
- #Write your code here
- pass
+    def __init__(self):
+        cashiers = CSVFileManager("data/cashiers.csv").read()
+        self.cashiers = CashierConverter().convert(cashiers)
+        CashierConverter().print(self.cashiers) 
+        
+        customers = CSVFileManager("data/customers.csv").read()
+        self.customers = CustomerConverter().convert(customers)
+        CustomerConverter().print(self.customers) 
 
+        drinks = CSVFileManager("data/drinks.csv").read()
+        self.drinks = ProductConverter().convert(drinks,Drink)
+        ProductConverter().print(self.drinks) 
+      
+        hamburgers = CSVFileManager("data/hamburgers.csv").read()
+        self.hamburgers = ProductConverter().convert(hamburgers,Hamburger)
+        ProductConverter().print(self.hamburgers) 
+        
+        happyMeal = CSVFileManager("data/happyMeal.csv").read()
+        self.happyMeal = ProductConverter().convert(happyMeal, HappyMeal)
+        ProductConverter().print(self.happyMeal) 
+        
+        sodas = CSVFileManager("data/sodas.csv").read()
+        self.sodas = ProductConverter().convert(sodas, Soda)
+        ProductConverter().print(self.sodas) 
+                                
