@@ -137,12 +137,19 @@ class PrepareOrder:
             if cashier.dni == dni:
                 return cashier
         return None
-    
+       
     def find_customer(self, dni):
         for customer in self.customers:
             if customer.dni == dni:
                 return customer
         return None
+    
+    def find_products(self, id):
+        listacompleta = self.hamburgers + self.sodas + self.drinks + self.happyMeal
+        for product in listacompleta:
+            if product.id == id:
+                return product
+        return None    
     
     def show_products(self, *args):
         productos = {"Hamburgers": self.hamburgers
@@ -151,21 +158,96 @@ class PrepareOrder:
                      , "HappyMeal": self.happyMeal
                      }
         if args[0] not in productos:
-            raise ValueError(f"Tipo de producto no válido: {args[0]}\nintroduce hamburguers, sodas, drinks o happyMeal")
-    
+            print(f"Tipo de producto no válido: {args[0]}\nIntroduce: Hamburgers, Sodas, Drinks o HappyMeal")
+            return None
         print("Product list:")
         ProductConverter().print(productos[args[0]])
+        return True
     
-    def show_customers(self, *args):
+    def show_customers(self):
         print("Customers list:")
         CustomerConverter().print(self.customers)
         
-    def show_cashiers(self, *args):
+    def show_cashiers(self):
         print("Customers list:")
         CashierConverter().print(self.cashiers) 
-#    def order(self):
- #       pass
 
+    def generar(self):
+        # vamos primero a introducir, y proteger, el cashier
+        cashier = None
+        while cashier is None:
+            self.show_cashiers()
+            dni = input("Introduce DNI cashier (o 'exit' para salir): ")
+            if dni == 'exit':
+                return  # si por lo que sea no le sale el DNI pretendido, podría querer salir del método y revisar bbdd por ejemplo
+            cashier = self.find_cashier(dni)
+            if cashier is None:
+                print("Cajero no encontrado, inténtalo de nuevo")
+        print(cashier.describe())
+        
+        ## ahora vamos con el customer
+        customer = None
+        while customer is None:
+            self.show_customers()
+            dni = input("Introduce DNI cashier (o 'exit' para salir): ")
+            if dni == 'exit':
+                return  # si por lo que sea no le sale el DNI pretendido, podría querer salir del método y revisar bbdd por ejemplo
+            customer = self.find_customer(dni)
+            if customer is None:
+                print("Cliente no encontrado, inténtalo de nuevo")
+        print(customer.describe())  
+        
+        ## toca añadir los procuctos, aquí haremos bucle       
+
+        order = Order(cashier, customer)
+        producttype = input("Elige productos de entre la siguiente lista: Hamburgers, Sodas, Drinks o HappyMeal")
+        resultado  = self.show_products(producttype)
+        while resultado is None:
+            producttype = input("Introduce tipo de producto (o 'exit' para salir): ")
+            if producttype == 'exit':
+                return  # si por lo que sea no le sale el tipo pretendido, podría querer salir del método y revisar bbdd por ejemplo
+            resultado = self.show_products(producttype)
+            if resultado is None:
+                print("Listado no encontrado, inténtalo de nuevo")
+        producto = input("Introduce id del producto deseado ")
+        product = self.find_products(producto)
+        while product is None:
+            self.show_products(producttype)            
+            producto = input("Introduce tipo de producto (o 'exit' para salir): ")
+            if producto == 'exit':     
+                return       
+            product = self.find_products(producto)
+            if product is None:
+                print("Producto no encontrado, inténtalo de nuevo")
+        order.add(product)        
+        otro = input("¿Quieres añadir otro producto? (Yes/No): ")
+        while otro.lower() == "yes":
+            producto = input("Introduce id del producto deseado ")
+            product = self.find_products(producto)
+            while product is None:
+                self.show_products(producttype)            
+                producto = input("Introduce tipo de producto (o 'exit' para salir): ")
+                if producto == 'exit':     
+                    return       
+                product = self.find_products(producto)
+                if product is None:
+                    print("Producto no encontrado, inténtalo de nuevo")
+            otro = input("¿Quieres añadir otro producto? (Yes/No): ")
+            order.add(product)
+        order.show()
+            
+        
+Order.add()
+PrepareOrder().Order()
 PrepareOrder().show_customers()
+'''
+3)	Preparar Orden:
+a.	Buscar cajero por dni: Función creada por el alumno y debe devolver una instancia de tipo cajero.
+b.	Buscar cliente por dni. Función creada por el alumno y debe devolver una instancia de tipo cliente.
+c.	Inicializar Orden: Utilizar una instancia la clase 'Order', e inicializar con su constructor por defecto.
+d.	Mostrar productos a vender: Función creada por el alumno.
+e.	Escoger productos: Función creada por el alumno.
+f.	Agregar productos: Utilizar la instancia la clase 'Order', del paso c y llamar al método 'add()'.
+4)	Mostrar Orden: Utilizar la instancia la clase 'Order', del paso c y llamar al método 'show()'
 
-
+'''
