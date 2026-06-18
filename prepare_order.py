@@ -200,7 +200,7 @@ class PrepareOrder:
         ## toca añadir los procuctos, aquí haremos bucle       
 
         order = Order(cashier, customer)
-        producttype = input("Elige productos de entre la siguiente lista: Hamburgers, Sodas, Drinks o HappyMeal")
+        producttype = input("Elige productos de entre la siguiente lista: Hamburgers, Sodas, Drinks o HappyMeal:")
         resultado  = self.show_products(producttype)
         while resultado is None:
             producttype = input("Introduce tipo de producto (o 'exit' para salir): ")
@@ -222,7 +222,7 @@ class PrepareOrder:
         order.add(product)        
         otro = input("¿Quieres añadir otro producto? (Yes/No): ")
         while otro.lower() == "yes":
-            producto = input("Introduce id del producto deseado ")
+            producto = input("Introduce id del producto deseado (ej: G1, H1): ")
             product = self.find_products(producto)
             while product is None:
                 self.show_products(producttype)            
@@ -236,10 +236,8 @@ class PrepareOrder:
             order.add(product)
         order.show()
             
-        
-Order.add()
-PrepareOrder().Order()
-PrepareOrder().show_customers()
+PrepareOrder().generar()
+
 '''
 3)	Preparar Orden:
 a.	Buscar cajero por dni: Función creada por el alumno y debe devolver una instancia de tipo cajero.
