@@ -110,25 +110,62 @@ class PrepareOrder:
     def __init__(self):
         cashiers = CSVFileManager("data/cashiers.csv").read()
         self.cashiers = CashierConverter().convert(cashiers)
-        CashierConverter().print(self.cashiers) 
+        #CashierConverter().print(self.cashiers) 
         
         customers = CSVFileManager("data/customers.csv").read()
         self.customers = CustomerConverter().convert(customers)
-        CustomerConverter().print(self.customers) 
+        #CustomerConverter().print(self.customers) 
 
         drinks = CSVFileManager("data/drinks.csv").read()
         self.drinks = ProductConverter().convert(drinks,Drink)
-        ProductConverter().print(self.drinks) 
+        #ProductConverter().print(self.drinks) 
       
         hamburgers = CSVFileManager("data/hamburgers.csv").read()
         self.hamburgers = ProductConverter().convert(hamburgers,Hamburger)
-        ProductConverter().print(self.hamburgers) 
+        #ProductConverter().print(self.hamburgers) 
         
         happyMeal = CSVFileManager("data/happyMeal.csv").read()
         self.happyMeal = ProductConverter().convert(happyMeal, HappyMeal)
-        ProductConverter().print(self.happyMeal) 
+        #ProductConverter().print(self.happyMeal) 
         
         sodas = CSVFileManager("data/sodas.csv").read()
         self.sodas = ProductConverter().convert(sodas, Soda)
-        ProductConverter().print(self.sodas) 
+        #ProductConverter().print(self.sodas) 
                                 
+    def find_cashier(self, dni):
+        for cashier in self.cashiers:
+            if cashier.dni == dni:
+                return cashier
+        return None
+    
+    def find_customer(self, dni):
+        for customer in self.customers:
+            if customer.dni == dni:
+                return customer
+        return None
+    
+    def show_products(self, *args):
+        productos = {"Hamburgers": self.hamburgers
+                     , "Sodas": self.sodas
+                     , "Drinks": self.drinks
+                     , "HappyMeal": self.happyMeal
+                     }
+        if args[0] not in productos:
+            raise ValueError(f"Tipo de producto no válido: {args[0]}\nintroduce hamburguers, sodas, drinks o happyMeal")
+    
+        print("Product list:")
+        ProductConverter().print(productos[args[0]])
+    
+    def show_customers(self, *args):
+        print("Customers list:")
+        CustomerConverter().print(self.customers)
+        
+    def show_cashiers(self, *args):
+        print("Customers list:")
+        CashierConverter().print(self.cashiers) 
+#    def order(self):
+ #       pass
+
+PrepareOrder().show_customers()
+
+
