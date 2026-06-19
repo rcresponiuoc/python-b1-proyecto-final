@@ -171,69 +171,80 @@ class PrepareOrder:
     def show_cashiers(self):
         print("Customers list:")
         CashierConverter().print(self.cashiers) 
-
+      
+    ## genero método adicional para facilitar el programa final la elección del artículo
+    def escoger_producto(self, producttype ,order):
+        producto = input("Introduce id del producto deseado (ej: G1, H1): ")
+        product = self.find_products(producto)
+        while product is None:
+            self.show_products(producttype)            
+            producto = input("Introduce el id del producto (o 'exit' para salir): ")
+            if producto == 'exit':     
+                return       
+            product = self.find_products(producto)
+            if product is None:
+                print("Producto no encontrado, inténtalo de nuevo")
+        order.add(product)
+        
+    ## genero método adicional para facilitar el programa final de visualización del tipo de pedido
+    ## de hecho, me permite invocar el tipo y añadir el bucle de pedir más o l oque sea, de manera que puedo jugar después
+    ## a meter este o el simple para mantener misma categoría
+    def escoger_tipo(self, order):
+        producttype = input("Elige productos de entre la siguiente lista: Hamburgers, Sodas, Drinks o HappyMeal:")
+        resultado  = self.show_products(producttype)
+        while resultado is None:
+            producttype = input("Introduce tipo de producto (o 'exit' para salir): ")
+            if producttype == 'exit':
+                return  # Lo mismo, fuerza salida si no es capaz de dar con el tipo o quiere cerrar
+            resultado = self.show_products(producttype)
+            if resultado is None:
+                print("Listado no encontrado, inténtalo de nuevo")
+        self.escoger_producto(producttype, order)
+        return producttype
+       
     def generar(self):
         # vamos primero a introducir, y proteger, el cashier
         cashier = None
         while cashier is None:
             self.show_cashiers()
-            dni = input("Introduce DNI cashier (o 'exit' para salir): ")
+            dni = input("Introduce DNI del cajero (o 'exit' para salir): ")
             if dni == 'exit':
                 return  # si por lo que sea no le sale el DNI pretendido, podría querer salir del método y revisar bbdd por ejemplo
             cashier = self.find_cashier(dni)
             if cashier is None:
-                print("Cajero no encontrado, inténtalo de nuevo")
+                print("Cajero no encontrado, inténtalo de nuevo.")
         print(cashier.describe())
         
         ## ahora vamos con el customer
         customer = None
         while customer is None:
             self.show_customers()
-            dni = input("Introduce DNI cashier (o 'exit' para salir): ")
+            dni = input("Introduce DNI del cliente (o 'exit' para salir): ")
             if dni == 'exit':
-                return  # si por lo que sea no le sale el DNI pretendido, podría querer salir del método y revisar bbdd por ejemplo
+                return  # si por lo que sea no le sale el DNI pretendido,
+                        # quien genera el pedido podría querer salir del método activo
+                        # y revisar bbdd por ejemplo
             customer = self.find_customer(dni)
             if customer is None:
-                print("Cliente no encontrado, inténtalo de nuevo")
+                print("Cliente no encontrado, inténtalo de nuevo.")
         print(customer.describe())  
         
         ## toca añadir los procuctos, aquí haremos bucle       
 
         order = Order(cashier, customer)
-        producttype = input("Elige productos de entre la siguiente lista: Hamburgers, Sodas, Drinks o HappyMeal:")
-        resultado  = self.show_products(producttype)
-        while resultado is None:
-            producttype = input("Introduce tipo de producto (o 'exit' para salir): ")
-            if producttype == 'exit':
-                return  # si por lo que sea no le sale el tipo pretendido, podría querer salir del método y revisar bbdd por ejemplo
-            resultado = self.show_products(producttype)
-            if resultado is None:
-                print("Listado no encontrado, inténtalo de nuevo")
-        producto = input("Introduce id del producto deseado ")
-        product = self.find_products(producto)
-        while product is None:
-            self.show_products(producttype)            
-            producto = input("Introduce tipo de producto (o 'exit' para salir): ")
-            if producto == 'exit':     
-                return       
-            product = self.find_products(producto)
-            if product is None:
-                print("Producto no encontrado, inténtalo de nuevo")
-        order.add(product)        
-        otro = input("¿Quieres añadir otro producto? (Yes/No): ")
-        while otro.lower() == "yes":
-            producto = input("Introduce id del producto deseado (ej: G1, H1): ")
-            product = self.find_products(producto)
-            while product is None:
-                self.show_products(producttype)            
-                producto = input("Introduce tipo de producto (o 'exit' para salir): ")
-                if producto == 'exit':     
-                    return       
-                product = self.find_products(producto)
-                if product is None:
-                    print("Producto no encontrado, inténtalo de nuevo")
-            otro = input("¿Quieres añadir otro producto? (Yes/No): ")
-            order.add(product)
+
+        producttype = self.escoger_tipo(order)
+        if producttype is None:
+            return        
+        otro = input("¿Quieres añadir otro producto? (Si/No): ")
+        
+        while otro.lower() == "si":
+            visualiza = input("¿Quieres cambiar de tipo de producto? (Si/No): ")
+            if visualiza.lower() == 'si':
+                producttype = self.escoger_tipo(order)
+            else:
+                self.escoger_producto(producttype, order)
+            otro = input("¿Quieres añadir otro producto? (Si/No): ")
         order.show()
             
 PrepareOrder().generar()
