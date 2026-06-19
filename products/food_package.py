@@ -8,7 +8,7 @@ class FoodPackage (ABC):
     def material(self) -> str:
         pass
     def describe(self):
-    ### en el enunciado en lugar de "empaque" usan "Wrapping" pero dado que viene por defecto así, lo dejamos.
+    # en el enunciado en lugar de "empaque" usan "Wrapping" pero dado que viene por defecto así, lo dejamos.
     # Quizá se debería hacer en inglés
         return f"Empaque: {self.pack()} , Material: {self.material()}"    
     

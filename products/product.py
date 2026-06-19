@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from .food_package import *
+from .food_package import * ##se ivoca este ya que le hará falta tener clara en función del producto, que packages corresponden
 
 class Product(ABC):
     def __init__(self,id:str,name:str,price:float):
@@ -18,7 +18,7 @@ class Product(ABC):
         pass  
 
 # empleando Self para dotar de identidad propia bajo los atributos que correspodan, al objeto (productos)
-# que obtendremos una vez pasados los parametros, en este caso, siguiedno los ejemplos/ datas
+# que obtendremos una vez pasados los parametros al método, en este caso, siguiendo los ejemplos/ datas
 class Hamburger(Product):
     def __init__(self,id:str,name:str,price:float):
         super().__init__(id,name,price)

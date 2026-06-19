@@ -105,6 +105,8 @@ from util import *
 from users import *
 from products import *
 from orders import *
+## añadimos esto para la extensión necesaria para el write
+from datetime import datetime
 
 class PrepareOrder:
     def __init__(self):
@@ -245,7 +247,18 @@ class PrepareOrder:
             else:
                 self.escoger_producto(producttype, order)
             otro = input("¿Quieres añadir otro producto? (Si/No): ")
+            
         order.show()
+        
+        ## generamos dataframe para contener los datos según enunciados que pasaremos al objeto
+        df_ventas = pd.DataFrame({
+            'dni_cajero': [order.cashier.dni],
+            'dni_comprador': [order.customer.dni],
+            'fecha_venta': [datetime.now()],
+            'total': [order.calculateTotal()]
+        })
+        path = "data/orders.csv"
+        CSVFileManager().write(self,dataFrame)
             
 PrepareOrder().generar()
 
