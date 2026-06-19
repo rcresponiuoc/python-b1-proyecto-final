@@ -238,16 +238,28 @@ class PrepareOrder:
         producttype = self.escoger_tipo(order)
         if producttype is None:
             return        
-        otro = input("¿Quieres añadir otro producto? (Si/No): ")
+        
+        otro = None
+        while otro not in ["si", "no"]:
+            otro = input("¿Quieres añadir otro producto? (Si/No): ").lower()
+            if otro not in ["si", "no"]:
+                print("Por favor introduce Si o No")
         
         while otro.lower() == "si":
-            visualiza = input("¿Quieres cambiar de tipo de producto? (Si/No): ")
+            visualiza = None
+            while visualiza not in ["si", "no"]:
+                visualiza = input("¿Cambiar categoría? (Si/No): ").lower()
+                if visualiza not in ["si", "no"]:
+                    print("Por favor introduce Si o No")
             if visualiza.lower() == 'si':
                 producttype = self.escoger_tipo(order)
             else:
                 self.escoger_producto(producttype, order)
-            otro = input("¿Quieres añadir otro producto? (Si/No): ")
-            
+            otro = None
+            while otro not in ["si", "no"]:
+                otro = input("¿Quieres añadir otro producto? (Si/No): ").lower()
+                if otro not in ["si", "no"]:
+                    print("Por favor introduce Si o No")            
         order.show()
         
         ## generamos dataframe para contener los datos según enunciados que pasaremos al objeto
@@ -258,7 +270,7 @@ class PrepareOrder:
             'total': [order.calculateTotal()]
         })
         path = "data/orders.csv"
-        CSVFileManager().write(self,dataFrame)
+        CSVFileManager(path).write(df_ventas)
             
 PrepareOrder().generar()
 
