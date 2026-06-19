@@ -21,4 +21,4 @@ class Order:
     print("Was attended by : "+self.cashier.describe())
     for product in self.products:
       print(product.describe())
-    print(f"Total price : {self.calculateTotal()}")
+    print(f"Total price : {round(self.calculateTotal(),2)}")## v2. se hace round, en un order concreto me salieron muchos decimales

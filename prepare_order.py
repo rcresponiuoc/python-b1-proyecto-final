@@ -107,13 +107,19 @@ from products import *
 from orders import *
 ## añadimos esto para la extensión necesaria para el write
 from datetime import datetime
+import pandas as pd
 
 class PrepareOrder:
     def __init__(self):
         cashiers = CSVFileManager("data/cashiers.csv").read()
         self.cashiers = CashierConverter().convert(cashiers)
-        #CashierConverter().print(self.cashiers) 
-        
+        #CashierConverter().print(self.cashiers)  
+        '''
+        --> me aprecía más óptimo no mostrar la lista entera , esta y las siguientes, ya que al hacer la carga así
+        te salia un mega listado y encontrar el tema era como complicado, en cambio, haciendo un show controlado, 
+        a medida que pide inputs, te las visualiza de manera controlada garantizando mayor accesibilidad al usuario
+        '''
+              
         customers = CSVFileManager("data/customers.csv").read()
         self.customers = CustomerConverter().convert(customers)
         #CustomerConverter().print(self.customers) 
@@ -133,27 +139,45 @@ class PrepareOrder:
         sodas = CSVFileManager("data/sodas.csv").read()
         self.sodas = ProductConverter().convert(sodas, Soda)
         #ProductConverter().print(self.sodas) 
-                                
+                           
     def find_cashier(self, dni):
+        # método definido como bucle que recorrelos cashiers previamente generados (self.cashiers) para encontrar
+        # el que haga match con el dni que viene entrado  en un momento, en este caso vía input
         for cashier in self.cashiers:
             if cashier.dni == dni:
                 return cashier
         return None
-       
+    
     def find_customer(self, dni):
+        # lo mismo que el anterior pero para customers
         for customer in self.customers:
             if customer.dni == dni:
                 return customer
         return None
-    
+
+
     def find_products(self, id):
+        # igual que el anterior, lo único que no tendría sentido hacer un find_products por tipo, facilita hacer uniones para hacer lectura
+        # completa, si bien hay un tema, y es que si existe el ID pasado, validará de manera total que existe, no hago ningún juego
+        # que permita meter un producttype o algo así para hacer un find_products inteligente en base a la clase que tocamos, se podría haber
+        # valorado        
         listacompleta = self.hamburgers + self.sodas + self.drinks + self.happyMeal
         for product in listacompleta:
             if product.id == id:
                 return product
         return None    
     
+    def show_customers(self):
+        print("Customers list:")
+        CustomerConverter().print(self.customers)
+        
+    def show_cashiers(self):
+        print("Cashiers list:") # --> Corregido tipo vs carga previa
+        CashierConverter().print(self.cashiers) 
+
     def show_products(self, *args):
+        # es la misma rutina que otros shows pero se pasa variable para inputar directamente la variable que determinará que listado
+        # mostrará, si bien protegido vía diccionario
         productos = {"Hamburgers": self.hamburgers
                      , "Sodas": self.sodas
                      , "Drinks": self.drinks
@@ -165,14 +189,6 @@ class PrepareOrder:
         print("Product list:")
         ProductConverter().print(productos[args[0]])
         return True
-    
-    def show_customers(self):
-        print("Customers list:")
-        CustomerConverter().print(self.customers)
-        
-    def show_cashiers(self):
-        print("Customers list:")
-        CashierConverter().print(self.cashiers) 
       
     ## genero método adicional para facilitar el programa final la elección del artículo
     def escoger_producto(self, producttype ,order):
@@ -230,21 +246,26 @@ class PrepareOrder:
             if customer is None:
                 print("Cliente no encontrado, inténtalo de nuevo.")
         print(customer.describe())  
-        
-        ## toca añadir los procuctos, aquí haremos bucle       
 
+        # toca generar order, le pasamos cajero y cliente como paramétros ya comprobados previos
         order = Order(cashier, customer)
 
+        # toca añadir los productos, aquí haremos bucles para que el generador tenga en cuenta 
+        # juego de cambios de clases de productos y de esta manera mostrar a medida que lo requiera 
+        # el listado de productos previamente tratado
+        # para hacerlo, se han generado funciones adicionales de apoyo. Simplifica lenguaje
         producttype = self.escoger_tipo(order)
         if producttype is None:
-            return        
-        
+            return 
+        # metemos protección a si o no, ya que incialmente lo hice con si pero vi que si ponía otra cosa interpretaba que era no
+        # que es lo mismo, pero no elegante. Releyendo el código me planteo hacer función adicional para evitar repetir código.
         otro = None
         while otro not in ["si", "no"]:
             otro = input("¿Quieres añadir otro producto? (Si/No): ").lower()
             if otro not in ["si", "no"]:
                 print("Por favor introduce Si o No")
-        
+                
+        # y empieza el juego
         while otro.lower() == "si":
             visualiza = None
             while visualiza not in ["si", "no"]:
