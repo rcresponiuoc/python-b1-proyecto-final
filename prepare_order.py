@@ -259,10 +259,12 @@ class PrepareOrder:
             while otro not in ["si", "no"]:
                 otro = input("¿Quieres añadir otro producto? (Si/No): ").lower()
                 if otro not in ["si", "no"]:
-                    print("Por favor introduce Si o No")            
+                    print("Por favor introduce Si o No")        
+    
+        # mostramos el orden generado, ya está hecho!    
         order.show()
         
-        ## generamos dataframe para contener los datos según enunciados que pasaremos al objeto
+        # Registramos y generamos en un dataframe los datos según enunciados que pasaremos al objeto de write definidos en file_manager
         df_ventas = pd.DataFrame({
             'dni_cajero': [order.cashier.dni],
             'dni_comprador': [order.customer.dni],
@@ -271,17 +273,6 @@ class PrepareOrder:
         })
         path = "data/orders.csv"
         CSVFileManager(path).write(df_ventas)
-            
+
+# llamada a la función principal que invoca el proceso          
 PrepareOrder().generar()
-
-'''
-3)	Preparar Orden:
-a.	Buscar cajero por dni: Función creada por el alumno y debe devolver una instancia de tipo cajero.
-b.	Buscar cliente por dni. Función creada por el alumno y debe devolver una instancia de tipo cliente.
-c.	Inicializar Orden: Utilizar una instancia la clase 'Order', e inicializar con su constructor por defecto.
-d.	Mostrar productos a vender: Función creada por el alumno.
-e.	Escoger productos: Función creada por el alumno.
-f.	Agregar productos: Utilizar la instancia la clase 'Order', del paso c y llamar al método 'add()'.
-4)	Mostrar Orden: Utilizar la instancia la clase 'Order', del paso c y llamar al método 'show()'
-
-'''
