@@ -8,9 +8,9 @@ class Order:
     self.products = []
 
   def add(self, product : Product):
-      self.products.append(product)
+      self.products.append(product)# añade a la lista definida en Order.products los valores del product que vienen
 
-  def calculateTotal(self) -> float:
+  def calculateTotal(self) -> float: # función incremental, se define variable a 0 y un bucle que incrementará segun se definan productos
         total = 0
         for product in self.products:
             total = total + product.price
